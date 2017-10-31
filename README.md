@@ -1,2 +1,2 @@
 # weather_api
-A weather application using Weather Underground API
+A weather command line application using Weather Underground API
