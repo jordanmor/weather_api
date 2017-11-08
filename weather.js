@@ -1,17 +1,7 @@
 const http = require('http');
 const https = require('https');
+const print = require('./print');
 const api = require('./api.json');
-
-// Print out temp details
-function printWeather(weather) {
-    const message = `Current temperature in ${weather.location.city} is ${weather.current_observation.temp_f}F`;
-    console.log(message);
-}
-
-// Print out error message
-function printError(error) {
-    console.error(error.message);
-}
 
 function get(query) {
     // Take out underscores for readability
@@ -31,28 +21,28 @@ function get(query) {
                         // Check if the location was found before printing
                         if (weather.location) {
                             // Print the data
-                            printWeather(weather);
+                            print.weather(weather);
                         } else {
                             const queryError = new Error(`The location "${readableQuery}" was not found.`);
-                            printError(queryError);
+                            print.error(queryError);
                         }
                     } catch (error) {
                         // Parse Error
-                        printError(error);
+                        print.error(error);
                     }
                 });
             } else {
                 // Status Code Error
                 const statusCodeError = new Error(`There was an error getting the message for ${readableQuery}. (${http.STATUS_CODES[response.statusCode]})`);
-                printError(statusCodeError);
+                print.error(statusCodeError);
             }
 
         });
 
-        request.on("error", printError);
+        request.on("error", print.error);
     } catch (error) {
         //Malformed URL Error
-        printError(error);
+        print.error(error);
     }
 }
 
